@@ -1,0 +1,15 @@
+location /api {
+   if (!-f $request_filename) {
+   		rewrite  ^(.*)$  /index.php?s=/$1  last;
+    }
+}
+location /admin {
+   if (!-f $request_filename) {
+   		rewrite  ^(.*)$  /index.php?s=/$1  last;
+    }
+}
+location /vue {
+   if (!-f $request_filename) {
+   		rewrite  ^(.*)$  /vueAdmin/index.html?s=/$1  last;
+    }
+}

@@ -1,0 +1,125 @@
+1.下载thinkphp 6作为模板
+	composer create-project topthink/think 【you project name】 6.0.*
+2.安装多应用
+	2.1 安装扩展
+		composer require topthink/think-multi-app
+    	2.2修改目录结构
+		app 应用目录
+		│  ├─index              主应用（应用层）
+		│  │  ├─controller      控制器目录
+		│  │  ├─model           模型目录
+		│  │  ├─view            视图目录
+		│  │  ├─config          配置目录
+		│  │  ├─route           路由目录
+		│  │  └─ ...            更多类库目录
+		│  │ 
+		│  ├─admin              后台应用（应用层）
+		│  │  └─ ... 
+3.安装 apidoc ---自动api文档
+	3.1执行安装命令
+		composer require hg/apidoc
+	3.2下载 apidoc ui
+           		打开浏览器访问 http://你的域名/apidoc/index.html ，出现接口文档页面，表示安装成功
+	3.3使用	
+		use hg\apidoc\annotation as Apidoc;
+
+4.数据库---数据库迁移
+	4.1安装扩展
+		composer require topthink/think-migration
+	4.2创建和使用
+		//执行命令,创建一个操作文件,一定要用大驼峰写法,如下
+		php think migrate:create AnyClassNameYouWant
+		//执行完成后,会在项目根目录多一个database目录,这里面存放类库操作文件
+		//文件名类似/database/migrations/20190615151716_any_class_name_you_want.php
+	4.3执行迁移工具
+		4.3.1执行迁移
+			php think migrate:run
+			//此时数据库便创建了prefix_users表.
+		4.3.2回退迁移
+			php think migrate:rollback
+5.添加JWT
+	5.1安装扩展
+		composer require firebase/php-jwt
+	5.2使用
+		use Firebase\JWT\JWT;
+		$jwt = JWT::encode($token, $key, "HS256");  //根据参数生成了 token
+		
+6.中间件
+	6.1创建中间件
+		php think make:middleware CheckToken
+	6.2开启跨域设置
+7.api 编写( controller  service model )
+	7.1 thinkphp 创建模型
+
+	7.2 多应用在对应应用层创建service目录并创建php类文件用于处理逻辑
+
+	7.3 多应用在对应应用层的controller目录下创建php类文件，单应用在app/controller目录下，注意首字母大写
+	
+	7.4 多应用在对应应用层的route目录下app.php文件中编写路由，单应用在app/route/app.php中修改
+8.验证器
+	可以使用下面的指令快速生成User验证器。
+	php think make:validate User
+	 try {
+            validate(User::class)->check([
+                'name'  => 'thinkphp',
+                'email' => 'thinkphp@qq.com',
+            ]);
+        } catch (ValidateException $e) {
+            // 验证失败 输出错误信息
+            dump($e->getError());
+        }
+
+9.自定义命令
+  9.1 创建命令类
+    php think make:command [className]
+  9.2配置命令名称
+    config/console.php下，注册类地址
+  9.3执行命令
+    注册完成后，就可以通过命令行来调用你的自定义命令了。打开命令行工具，切换到项目根目录下，执行命令：
+        php think hello
+    如果你想带上参数，可以这样：
+        php think hello ThinkPHP
+  9.4 在代码中执行系统命令
+    9.4.1 exec 函数执行一个外部程序，并且只返回最后一行的输出。
+       exec('php think migrate:run', $output, $return_var);
+    9.4.2 shell_exec 函数执行一个命令并且将完整的输出作为字符串返回
+        $output = shell_exec('php think migrate:run');
+    9.4.3 system 函数用于执行外部程序，并且显示输出
+        system('php think migrate:run', $return_var);
+    9.4.4 使用 Symfony\Component\Process\Process
+        安装  composer require symfony/process
+
+        然后，你可以这样使用它：
+        use Symfony\Component\Process\Process;
+        use Symfony\Component\Process\Exception\ProcessFailedException;
+
+        $process = new Process(['php', 'think', 'migrate:run']);
+        $process->run();
+
+        // 执行过程中的输出
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        echo $process->getOutput();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
